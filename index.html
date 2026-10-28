@@ -38,7 +38,6 @@
             padding: 2rem 1rem;
         }
 
-        /* Particle background canvas */
         #canvas-container {
             position: fixed;
             top: 0;
@@ -49,7 +48,6 @@
             pointer-events: none;
         }
 
-        /* Main Container */
         .container {
             position: relative;
             z-index: 2;
@@ -58,7 +56,6 @@
             text-align: center;
         }
 
-        /* Audio Controls */
         .audio-btn {
             background: rgba(223, 184, 115, 0.1);
             border: 1px solid var(--gold);
@@ -82,7 +79,6 @@
             transform: translateY(-1px);
         }
 
-        /* Title Styling */
         h1 {
             font-family: 'Cormorant Garamond', serif;
             font-size: 2.5rem;
@@ -93,7 +89,6 @@
             text-shadow: 0 0 20px rgba(223, 184, 115, 0.2);
         }
 
-        /* Card Container */
         .poem-card {
             background: var(--card-bg);
             border: 1px solid rgba(223, 184, 115, 0.2);
@@ -105,7 +100,6 @@
             margin-bottom: 2rem;
         }
 
-        /* Stanza Styling */
         .stanza {
             font-family: 'Cormorant Garamond', serif;
             font-size: 1.45rem;
@@ -132,9 +126,59 @@
             margin: 0.2rem 0;
         }
 
-        /* Dedication Styling */
         .dedication {
             margin-top: 2rem;
             padding-top: 1.5rem;
             border-top: 1px solid rgba(223, 184, 115, 0.15);
-            font-
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.25rem;
+            font-style: italic;
+            color: var(--gold);
+            letter-spacing: 1px;
+            opacity: 0;
+            transition: opacity 1s ease 0.5s;
+        }
+
+        .dedication.visible {
+            opacity: 1;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(223, 184, 115, 0.3);
+            color: var(--text-main);
+            padding: 0.6rem 1.4rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            background: rgba(223, 184, 115, 0.15);
+            color: var(--gold-light);
+            border-color: var(--gold);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        footer {
+            margin-top: 2rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size:
