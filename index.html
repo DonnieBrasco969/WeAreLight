@@ -6,7 +6,6 @@
     <title>Search the Light</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts for Elegant Serif & Modern Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
@@ -59,24 +58,21 @@
         }
 
         .stanza-card {
-            transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .stanza-hidden {
             opacity: 0;
-            transform: translateY(20px);
+            transform: translateY(15px);
             pointer-events: none;
             position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            display: none;
+            transition: opacity 0.5s ease, transform 0.5s ease;
         }
 
-        .stanza-active {
+        .stanza-card.stanza-active {
             opacity: 1;
             transform: translateY(0);
+            pointer-events: auto;
             position: relative;
-            width: 100%;
-            display: block;
         }
 
         ::-webkit-scrollbar {
@@ -110,7 +106,7 @@
             
             <div class="flex items-center justify-between pb-6 mb-6 border-b border-gray-800 text-xs text-gray-400">
                 <div class="flex items-center space-x-2">
-                    <button id="readAloudBtn" onclick="toggleReadAloud()" class="flex items-center space-x-2 text-gold hover:text-gold-light transition-colors focus:outline-none" title="Listen to narration">
+                    <button id="readAloudBtn" onclick="toggleReadAloud()" class="flex items-center space-x-2 text-gold hover:text-gold-light transition-colors focus:outline-none cursor-pointer" title="Listen to narration">
                         <svg id="playIcon" class="w-4 h-4 fill-current" viewBox="0 0 24 24">
                             <path d="M8 5v14l11-7z"/>
                         </svg>
@@ -129,7 +125,7 @@
             </div>
 
             <!-- Stanzas Container -->
-            <div id="stanzasContainer" class="relative min-h-[180px] flex items-center mb-6">
+            <div id="stanzasContainer" class="relative min-h-[160px] mb-6">
                 
                 <!-- Stanza 1 -->
                 <div class="stanza-card stanza-active" data-index="0">
@@ -142,7 +138,7 @@
                 </div>
 
                 <!-- Stanza 2 -->
-                <div class="stanza-card stanza-hidden" data-index="1">
+                <div class="stanza-card" data-index="1">
                     <p class="font-serif text-xl sm:text-2xl leading-relaxed text-gray-100 font-normal italic space-y-2">
                         Though chaos splits the world in two,<br>
                         And rules seem lost in endless night,<br>
@@ -152,7 +148,7 @@
                 </div>
 
                 <!-- Stanza 3 -->
-                <div class="stanza-card stanza-hidden" data-index="2">
+                <div class="stanza-card" data-index="2">
                     <p class="font-serif text-xl sm:text-2xl leading-relaxed text-gray-100 font-normal italic space-y-2">
                         The freedom given in our hands,<br>
                         Can build a paradise or cage,<br>
@@ -162,7 +158,7 @@
                 </div>
 
                 <!-- Stanza 4 -->
-                <div class="stanza-card stanza-hidden" data-index="3">
+                <div class="stanza-card" data-index="3">
                     <p class="font-serif text-xl sm:text-2xl leading-relaxed text-gray-100 font-normal italic space-y-2">
                         So do not let the shadow bind<br>
                         The gentle warmth inside your chest;<br>
@@ -173,8 +169,8 @@
 
             </div>
 
-            <!-- Ending Note / Dedication (Hidden until last stanza or navigation finish) -->
-            <div id="endingNote" class="hidden text-center pt-6 border-t border-gray-800 space-y-4">
+            <!-- Ending Note / Dedication -->
+            <div id="endingNote" class="hidden text-center pt-2 pb-2 space-y-4">
                 <p class="font-serif italic text-sm text-gold/80 leading-relaxed">
                     "No matter how dark the night gets, remember that light and love are choices we carry within ourselves."
                 </p>
@@ -182,7 +178,7 @@
                     Only for A.R. ❤️
                 </p>
                 <div>
-                    <button onclick="restartPoem()" class="text-xs uppercase tracking-widest text-gray-400 hover:text-gold transition-colors underline underline-offset-4 cursor-pointer">
+                    <button onclick="restartPoem()" class="text-xs uppercase tracking-widest text-gray-400 hover:text-gold transition-colors underline underline-offset-4 cursor-pointer mt-2">
                         Read From Beginning
                     </button>
                 </div>
@@ -190,86 +186,4 @@
 
             <!-- Controls -->
             <div id="controlsContainer" class="pt-6 border-t border-gray-800 flex items-center justify-between">
-                <button id="prevBtn" onclick="navigateStanza(-1)" disabled class="px-4 py-2 text-xs uppercase tracking-wider font-medium text-gray-400 bg-gray-800/50 rounded-lg hover:bg-gray-800 transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer">
-                    &larr; Previous
-                </button>
-                <span id="progressIndicator" class="text-xs uppercase tracking-widest text-gold/60 font-sans">
-                    1 of 4
-                </span>
-                <button id="nextBtn" onclick="navigateStanza(1)" class="px-5 py-2 text-xs uppercase tracking-wider font-medium text-night bg-gold rounded-lg hover:bg-gold-light transition-colors cursor-pointer shadow-md">
-                    Next Stanza &rarr;
-                </button>
-            </div>
-
-        </div>
-
-    </main>
-
-    <footer class="relative z-10 text-center py-4 text-[10px] text-gray-600 tracking-wider">
-        MADE WITH CARE &bull; ONLY FOR A.R. ❤️
-    </footer>
-
-    <script>
-        let currentStanza = 0;
-        const totalStanzas = 4;
-        const stanzaCards = document.querySelectorAll('.stanza-card');
-        const dots = document.querySelectorAll('.dot');
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
-        const progressIndicator = document.getElementById('progressIndicator');
-        const endingNote = document.getElementById('endingNote');
-
-        function updateStanzas() {
-            stanzaCards.forEach((card, index) => {
-                if (index === currentStanza) {
-                    card.classList.remove('stanza-hidden');
-                    card.classList.add('stanza-active');
-                } else {
-                    card.classList.remove('stanza-active');
-                    card.classList.add('stanza-hidden');
-                }
-            });
-
-            dots.forEach((dot, index) => {
-                if (index === currentStanza) {
-                    dot.className = "dot w-2 h-2 rounded-full bg-gold shadow-[0_0_8px_rgba(226,184,102,0.8)] transition-all duration-300";
-                } else if (index < currentStanza) {
-                    dot.className = "dot w-2 h-2 rounded-full bg-gold/50 transition-all duration-300";
-                } else {
-                    dot.className = "dot w-2 h-2 rounded-full bg-gray-700 transition-all duration-300";
-                }
-            });
-
-            prevBtn.disabled = currentStanza === 0;
-            progressIndicator.innerText = `${currentStanza + 1} of ${totalStanzas}`;
-            
-            if (currentStanza === totalStanzas - 1) {
-                nextBtn.innerText = "Complete Poem";
-            } else {
-                nextBtn.innerHTML = "Next Stanza &rarr;";
-            }
-
-            const glow = document.getElementById('ambientGlow');
-            glow.style.transform = `translate(-50%, -50%) scale(${1 + currentStanza * 0.15})`;
-        }
-
-        function navigateStanza(direction) {
-            if (direction === 1 && currentStanza < totalStanzas - 1) {
-                currentStanza++;
-                updateStanzas();
-            } else if (direction === -1 && currentStanza > 0) {
-                currentStanza--;
-                endingNote.classList.add('hidden');
-                document.getElementById('stanzasContainer').classList.remove('hidden');
-                updateStanzas();
-            } else if (direction === 1 && currentStanza === totalStanzas - 1) {
-                // Show ending dedication screen
-                document.getElementById('stanzasContainer').classList.add('hidden');
-                endingNote.classList.remove('hidden');
-                nextBtn.style.display = 'none';
-                prevBtn.style.display = 'none';
-                progressIndicator.style.display = 'none';
-            }
-        }
-
-        function restartPo
+                <button id="prevBtn" onclick="navigateStanza(-1)" disabled class="px-4 py
