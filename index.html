@@ -1,184 +1,275 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Remember That You Have a Soul</title>
+    <title>Search the Light</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for Elegant Serif & Modern Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        night: '#090d16',
+                        cardBg: '#111827',
+                        gold: {
+                            light: '#f7e1ad',
+                            DEFAULT: '#e2b866',
+                            dark: '#b38d3f'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        :root {
-            --bg-color: #0b0d13;
-            --card-bg: rgba(20, 24, 33, 0.75);
-            --gold: #dfb873;
-            --gold-light: #f7e3b5;
-            --text-main: #e2e8f0;
-            --text-muted: #94a3b8;
-            --accent-glow: rgba(223, 184, 115, 0.15);
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
         body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            font-family: 'Outfit', sans-serif;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            background-color: #090d16;
+            color: #e5e7eb;
             overflow-x: hidden;
-            position: relative;
-            padding: 2rem 1rem;
         }
 
-        #canvas-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
+        .gold-border {
+            border: 1px solid rgba(226, 184, 102, 0.25);
+            box-shadow: 0 0 25px rgba(226, 184, 102, 0.08);
+        }
+
+        .gold-text-glow {
+            text-shadow: 0 0 12px rgba(226, 184, 102, 0.35);
+        }
+
+        .ambient-glow {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(226, 184, 102, 0.12) 0%, rgba(9, 13, 22, 0) 70%);
+            border-radius: 50%;
             pointer-events: none;
+            transition: all 1.2s ease-out;
         }
 
-        .container {
-            position: relative;
-            z-index: 2;
-            max-width: 650px;
+        .stanza-card {
+            transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .stanza-hidden {
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
+            position: absolute;
             width: 100%;
-            text-align: center;
+            display: none;
         }
 
-        .audio-btn {
-            background: rgba(223, 184, 115, 0.1);
-            border: 1px solid var(--gold);
-            color: var(--gold-light);
-            padding: 0.6rem 1.2rem;
-            border-radius: 30px;
-            font-size: 0.85rem;
-            letter-spacing: 1px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-bottom: 2.5rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            backdrop-filter: blur(5px);
-        }
-
-        .audio-btn:hover {
-            background: rgba(223, 184, 115, 0.25);
-            box-shadow: 0 0 15px rgba(223, 184, 115, 0.3);
-            transform: translateY(-1px);
-        }
-
-        h1 {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 2.5rem;
-            font-weight: 600;
-            color: var(--gold-light);
-            letter-spacing: 2px;
-            margin-bottom: 2rem;
-            text-shadow: 0 0 20px rgba(223, 184, 115, 0.2);
-        }
-
-        .poem-card {
-            background: var(--card-bg);
-            border: 1px solid rgba(223, 184, 115, 0.2);
-            border-radius: 16px;
-            padding: 2.5rem 2rem;
-            backdrop-filter: blur(12px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5),
-                        inset 0 0 20px var(--accent-glow);
-            margin-bottom: 2rem;
-        }
-
-        .stanza {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.45rem;
-            line-height: 1.8;
-            color: var(--text-main);
-            margin-bottom: 2.5rem;
-            opacity: 0.15;
-            transform: translateY(15px);
-            transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            filter: blur(3px);
-        }
-
-        .stanza.active {
+        .stanza-active {
             opacity: 1;
             transform: translateY(0);
-            filter: blur(0);
+            position: relative;
+            width: 100%;
+            display: block;
         }
 
-        .stanza:last-child {
-            margin-bottom: 0;
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #090d16;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(226, 184, 102, 0.3);
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body class="h-full flex flex-col justify-between font-sans selection:bg-gold-dark selection:text-white">
+
+    <canvas id="particleCanvas" class="fixed inset-0 z-0 pointer-events-none"></canvas>
+    <div id="ambientGlow" class="ambient-glow z-0 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
+
+    <main class="relative z-10 flex-grow flex flex-col justify-center items-center px-4 py-10 max-w-lg mx-auto w-full min-h-screen">
+        
+        <header class="text-center mb-8 space-y-2 fade-in">
+            <span class="text-xs uppercase tracking-[0.3em] text-gold/70 font-medium">A Poem for You</span>
+            <h1 class="font-serif text-3xl sm:text-4xl text-gold-light font-light italic gold-text-glow">Search the Light</h1>
+            <p class="text-xs text-gray-400 font-light italic max-w-xs mx-auto pt-1">
+                "A thought on freedom, darkness, and what we choose to carry..."
+            </p>
+        </header>
+
+        <div class="w-full bg-cardBg/80 backdrop-blur-md rounded-2xl p-6 sm:p-8 gold-border relative shadow-2xl transition-all duration-500">
+            
+            <div class="flex items-center justify-between pb-6 mb-6 border-b border-gray-800 text-xs text-gray-400">
+                <div class="flex items-center space-x-2">
+                    <button id="readAloudBtn" onclick="toggleReadAloud()" class="flex items-center space-x-2 text-gold hover:text-gold-light transition-colors focus:outline-none" title="Listen to narration">
+                        <svg id="playIcon" class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z"/>
+                        </svg>
+                        <svg id="pauseIcon" class="w-4 h-4 fill-current hidden" viewBox="0 0 24 24">
+                            <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+                        </svg>
+                        <span id="readText">Listen to Poem</span>
+                    </button>
+                </div>
+                <div class="flex items-center space-x-2" id="progressDots">
+                    <span class="dot w-2 h-2 rounded-full bg-gold transition-all duration-300"></span>
+                    <span class="dot w-2 h-2 rounded-full bg-gray-700 transition-all duration-300"></span>
+                    <span class="dot w-2 h-2 rounded-full bg-gray-700 transition-all duration-300"></span>
+                    <span class="dot w-2 h-2 rounded-full bg-gray-700 transition-all duration-300"></span>
+                </div>
+            </div>
+
+            <!-- Stanzas Container -->
+            <div id="stanzasContainer" class="relative min-h-[180px] flex items-center mb-6">
+                
+                <!-- Stanza 1 -->
+                <div class="stanza-card stanza-active" data-index="0">
+                    <p class="font-serif text-xl sm:text-2xl leading-relaxed text-gray-100 font-normal italic space-y-2">
+                        Our souls are the source of loving,<br>
+                        Our conscience holds the inner control,<br>
+                        And when you feel the darkness winning,<br>
+                        <span class="text-gold font-medium">Remember that you have a soul.</span>
+                    </p>
+                </div>
+
+                <!-- Stanza 2 -->
+                <div class="stanza-card stanza-hidden" data-index="1">
+                    <p class="font-serif text-xl sm:text-2xl leading-relaxed text-gray-100 font-normal italic space-y-2">
+                        Though chaos splits the world in two,<br>
+                        And rules seem lost in endless night,<br>
+                        The pain shouldn't be our main view,<br>
+                        <span class="text-gold font-medium">But proof we're made to search the Light.</span>
+                    </p>
+                </div>
+
+                <!-- Stanza 3 -->
+                <div class="stanza-card stanza-hidden" data-index="2">
+                    <p class="font-serif text-xl sm:text-2xl leading-relaxed text-gray-100 font-normal italic space-y-2">
+                        The freedom given in our hands,<br>
+                        Can build a paradise or cage,<br>
+                        A gift of grace to all the lands,<br>
+                        Or just a tool of hurt and rage.
+                    </p>
+                </div>
+
+                <!-- Stanza 4 -->
+                <div class="stanza-card stanza-hidden" data-index="3">
+                    <p class="font-serif text-xl sm:text-2xl leading-relaxed text-gray-100 font-normal italic space-y-2">
+                        So do not let the shadow bind<br>
+                        The gentle warmth inside your chest;<br>
+                        For even in a world gone blind,<br>
+                        <span class="text-gold font-medium">The searching soul will find its rest.</span>
+                    </p>
+                </div>
+
+            </div>
+
+            <!-- Ending Note / Dedication (Hidden until last stanza or navigation finish) -->
+            <div id="endingNote" class="hidden text-center pt-6 border-t border-gray-800 space-y-4">
+                <p class="font-serif italic text-sm text-gold/80 leading-relaxed">
+                    "No matter how dark the night gets, remember that light and love are choices we carry within ourselves."
+                </p>
+                <p class="font-serif text-gold font-medium text-lg tracking-wider uppercase gold-text-glow">
+                    Only for A.R. ❤️
+                </p>
+                <div>
+                    <button onclick="restartPoem()" class="text-xs uppercase tracking-widest text-gray-400 hover:text-gold transition-colors underline underline-offset-4 cursor-pointer">
+                        Read From Beginning
+                    </button>
+                </div>
+            </div>
+
+            <!-- Controls -->
+            <div id="controlsContainer" class="pt-6 border-t border-gray-800 flex items-center justify-between">
+                <button id="prevBtn" onclick="navigateStanza(-1)" disabled class="px-4 py-2 text-xs uppercase tracking-wider font-medium text-gray-400 bg-gray-800/50 rounded-lg hover:bg-gray-800 transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer">
+                    &larr; Previous
+                </button>
+                <span id="progressIndicator" class="text-xs uppercase tracking-widest text-gold/60 font-sans">
+                    1 of 4
+                </span>
+                <button id="nextBtn" onclick="navigateStanza(1)" class="px-5 py-2 text-xs uppercase tracking-wider font-medium text-night bg-gold rounded-lg hover:bg-gold-light transition-colors cursor-pointer shadow-md">
+                    Next Stanza &rarr;
+                </button>
+            </div>
+
+        </div>
+
+    </main>
+
+    <footer class="relative z-10 text-center py-4 text-[10px] text-gray-600 tracking-wider">
+        MADE WITH CARE &bull; ONLY FOR A.R. ❤️
+    </footer>
+
+    <script>
+        let currentStanza = 0;
+        const totalStanzas = 4;
+        const stanzaCards = document.querySelectorAll('.stanza-card');
+        const dots = document.querySelectorAll('.dot');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const progressIndicator = document.getElementById('progressIndicator');
+        const endingNote = document.getElementById('endingNote');
+
+        function updateStanzas() {
+            stanzaCards.forEach((card, index) => {
+                if (index === currentStanza) {
+                    card.classList.remove('stanza-hidden');
+                    card.classList.add('stanza-active');
+                } else {
+                    card.classList.remove('stanza-active');
+                    card.classList.add('stanza-hidden');
+                }
+            });
+
+            dots.forEach((dot, index) => {
+                if (index === currentStanza) {
+                    dot.className = "dot w-2 h-2 rounded-full bg-gold shadow-[0_0_8px_rgba(226,184,102,0.8)] transition-all duration-300";
+                } else if (index < currentStanza) {
+                    dot.className = "dot w-2 h-2 rounded-full bg-gold/50 transition-all duration-300";
+                } else {
+                    dot.className = "dot w-2 h-2 rounded-full bg-gray-700 transition-all duration-300";
+                }
+            });
+
+            prevBtn.disabled = currentStanza === 0;
+            progressIndicator.innerText = `${currentStanza + 1} of ${totalStanzas}`;
+            
+            if (currentStanza === totalStanzas - 1) {
+                nextBtn.innerText = "Complete Poem";
+            } else {
+                nextBtn.innerHTML = "Next Stanza &rarr;";
+            }
+
+            const glow = document.getElementById('ambientGlow');
+            glow.style.transform = `translate(-50%, -50%) scale(${1 + currentStanza * 0.15})`;
         }
 
-        .stanza p {
-            margin: 0.2rem 0;
+        function navigateStanza(direction) {
+            if (direction === 1 && currentStanza < totalStanzas - 1) {
+                currentStanza++;
+                updateStanzas();
+            } else if (direction === -1 && currentStanza > 0) {
+                currentStanza--;
+                endingNote.classList.add('hidden');
+                document.getElementById('stanzasContainer').classList.remove('hidden');
+                updateStanzas();
+            } else if (direction === 1 && currentStanza === totalStanzas - 1) {
+                // Show ending dedication screen
+                document.getElementById('stanzasContainer').classList.add('hidden');
+                endingNote.classList.remove('hidden');
+                nextBtn.style.display = 'none';
+                prevBtn.style.display = 'none';
+                progressIndicator.style.display = 'none';
+            }
         }
 
-        .dedication {
-            margin-top: 2rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid rgba(223, 184, 115, 0.15);
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.25rem;
-            font-style: italic;
-            color: var(--gold);
-            letter-spacing: 1px;
-            opacity: 0;
-            transition: opacity 1s ease 0.5s;
-        }
-
-        .dedication.visible {
-            opacity: 1;
-        }
-
-        .controls {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
-
-        .nav-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(223, 184, 115, 0.3);
-            color: var(--text-main);
-            padding: 0.6rem 1.4rem;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .nav-btn:hover:not(:disabled) {
-            background: rgba(223, 184, 115, 0.15);
-            color: var(--gold-light);
-            border-color: var(--gold);
-        }
-
-        .nav-btn:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-            border-color: rgba(255, 255, 255, 0.1);
-        }
-
-        footer {
-            margin-top: 2rem;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            letter-spacing: 1px;
-        }
-
-        @media (max-width: 600px) {
-            h1 { font-size:
+        function restartPo
